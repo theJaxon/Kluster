@@ -1,0 +1,3 @@
+--- 
+- name: Run Join script 
+  script: /home/vagrant/join.sh 

@@ -1,0 +1,63 @@
+---
+- name: Enable kubectl completion and add aliases to .bashrc
+  blockinfile:
+    block: |
+      alias k=kubectl
+      export do='-o yaml --dry-run=client'
+      source <(kubectl completion bash | sed 's/kubectl/k/g')
+    path: "{{ home_dir }}/.bashrc"
+    
+- name: Autoindent in .vimrc 
+  copy:
+    content: set ai expandtab tabstop=2 shiftwidth=2
+    dest: "{{ home_dir }}/.vimrc" 
+
+- name: Add machine entries in /etc/hosts 
+  blockinfile:
+    block: |
+      192.168.100.10 master master.example.com 
+      192.168.100.11 worker1 worker1.example.com 
+      192.168.100.12 worker2 worker2.example.com 
+    path: /etc/hosts
+
+- name: Add Kubernetes gpg key 
+  apt_key: 
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    
+- name: Add Kubernetes repository 
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    update_cache: True 
+  
+- name: Install required software for the cluster 
+  apt: 
+    name: "{{ item }}" 
+    force: True 
+  loop: "{{ packages }}"
+
+- name: Add Docker daemon.json file 
+  copy:
+    content: |
+      {
+        "exec-opts": ["native.cgroupdriver=systemd"],
+        "log-driver": "json-file",
+         "storage-driver": "overlay2"
+      }
+    dest: /etc/docker/daemon.json
+
+- name: Create docker.service directory 
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory 
+  notify: restart docker 
+
+- name: remove swap line from /etc/fstab
+  lineinfile:
+    state: absent 
+    regexp: 'swap'
+    path: /etc/fstab 
+  tags: kluster
+
+- name: disable swap 
+  command: "swapoff -a"
+  tags: kluster

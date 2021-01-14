@@ -1,0 +1,77 @@
+---
+- name: Check if ssh key exists 
+  stat:
+    path: "{{ home_dir }}/.ssh/id_rsa"
+  register: key_stat
+
+- name: SSH block 
+  block:
+  - name: Generate SSH key on master node  
+    shell: 'ssh-keygen -N "" -f id_rsa' 
+    args:
+      chdir: "{{ home_dir }}/.ssh" 
+    become_user: vagrant  
+    tags: ssh 
+
+  - name: Add key to the 2 worker nodes 
+    shell: "sshpass -p 'vagrant' ssh-copy-id -o StrictHostKeyChecking=no -i {{ home_dir }}/.ssh/id_rsa.pub vagrant@worker{{ item }}"
+    args:
+      chdir: "{{ home_dir }}/.ssh"
+    become_user: vagrant 
+    loop: "{{ range(1,3) | list }}" # Range excludes the endpoint that's why the range is from 1 to 3
+    tags: ssh 
+  when: not key_stat.stat.exists 
+
+- name: Initialize the cluster 
+  command: > 
+    "kubeadm init 
+    --apiserver-advertise-address=192.168.100.10 
+    --pod-network-cidr=10.32.0.0/12 
+    --kubernetes-version={{ K8S_V }} 
+    --skip-token-print"
+  tags: kluster
+
+- name: Create .kube directory 
+  file:
+    state: directory 
+    path: "{{ home_dir }}/.kube"
+  tags: kluster
+
+- name: Change admin.conf ownership 
+  file:
+    path: /etc/kubernetes/admin.conf 
+    owner: vagrant 
+    group: vagrant 
+  tags: kluster
+
+- name: Place kubeconfig file in .kube directory
+  copy:
+    src: /etc/kubernetes/admin.conf 
+    dest: "{{ home_dir }}/.kube/conf"
+  tags: kluster
+
+- name: Add KUBECONFIG ENV variable to bashrc 
+  lineinfile:
+    line: "export KUBECONFIG={{ home_dir }}/.kube/conf"
+    dest: "{{ home_dir }}/.bashrc"
+  tags: kluster
+
+- name: Add Weave net CNI Plugin 
+  shell: > 
+    kubectl apply 
+    --kubeconfig=/home/vagrant/.kube/conf 
+    -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+  become_user: vagrant
+  tags: kluster
+
+- name: Generate token that will be used to join nodes 
+  shell: kubeadm token create --print-join-command --ttl 0 2> /dev/null
+  register: join_command 
+
+- name: store join command in a file 
+  copy:
+    content: "{{ join_command.stdout }}"
+    dest: "{{ home_dir }}/join.sh"
+    owner: vagrant 
+    group: vagrant 
+    mode: '0744'

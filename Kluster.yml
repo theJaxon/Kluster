@@ -1,0 +1,16 @@
+- hosts: localhost # Master Node  
+  vars:
+    home_dir: /home/vagrant
+  roles:
+  - bootstrap
+  - master 
+
+- hosts: worker1,worker2
+  roles:
+  - bootstrap
+  - worker 
+  
+# Addons -- Optional
+- hosts: localhost
+  roles:
+  - addons 

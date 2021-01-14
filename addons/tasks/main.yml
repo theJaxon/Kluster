@@ -1,0 +1,10 @@
+---
+# tasks file for addons
+- name: Install the addons 
+  command: "kubectl apply  -f /vagrant/addons/files/{{ item }}.yaml --kubeconfig=/home/vagrant/.kube/conf"
+  loop:
+  - metallb
+  - metallb-config
+  - metallb-memberlist-secret
+  - local-path-storage
+  - ingress-nginx-controller
