@@ -19,6 +19,7 @@ Yet another k8s cluster using kubeadm
 - LoadBalancer implementation is provided using **[MetalLB](https://metallb.universe.tf/)**
 - For ingress, **[nginx-ingress-controller](https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal)** is used
 - [Weave net CNI](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/#-installation) is used to provide [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+- [Metrics server](https://github.com/kubernetes-sigs/metrics-server) for collecting resource metrics
 
 ---
 

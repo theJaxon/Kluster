@@ -61,3 +61,9 @@
 - name: disable swap 
   command: "swapoff -a"
   tags: kluster
+
+- name: Add vagrant user to docker group 
+  user:
+    name: vagrant 
+    groups: docker 
+    append: True 

@@ -8,3 +8,4 @@
   - metallb-memberlist-secret
   - local-path-storage
   - ingress-nginx-controller
+  - metrics-server
