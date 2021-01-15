@@ -1,0 +1,25 @@
+- name: Get kube-bench latest release tag 
+  shell: >
+    curl https://api.github.com/repos/aquasecurity/kube-bench/releases/latest | grep tag_name | cut -d '"' -f4
+  args:
+    warn: False 
+  register: kube_bench_var # Kube bench tag includes a v letter before version number
+  tags: kube-bench 
+
+- name: Gather package facts 
+  package_facts:
+    manager: auto
+  tags: kube-bench 
+
+- name: Store kube bench version number and latest tag 
+  set_fact:
+    kube_bench_tag: "{{ kube_bench_var['stdout'] }}"
+    kube_bench_version: "{{ kube_bench_var['stdout'][1:] }}" # Just store the version in numbers without the v at the beginning
+  tags: kube-bench 
+
+- name: Install kube-bench if not present 
+  apt:
+    deb: "{{ kube_bench_deb }}"
+    state: present 
+  when: "'kube-bench' not in ansible_facts['packages'] "
+  tags: kube-bench 

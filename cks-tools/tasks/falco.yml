@@ -1,0 +1,16 @@
+- name: Get kernel release 
+  command: uname -r 
+  register: kernel_release_var
+  tags: falco 
+
+- name: Install kernel headers for falco 
+  apt:
+    name: "linux-headers-{{ kernel_release_var['stdout'] }}"
+    state: present
+  tags: falco
+
+- name: Start and enable falco service 
+  service:
+    name: falco 
+    state: started 
+    enabled: True 

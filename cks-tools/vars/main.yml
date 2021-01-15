@@ -1,0 +1,14 @@
+---
+software_list:
+  - name: trivy 
+    key: https://aquasecurity.github.io/trivy-repo/deb/public.key
+    repo: deb https://aquasecurity.github.io/trivy-repo/deb focal main 
+
+  - name: falco
+    key: https://falco.org/repo/falcosecurity-3672BA8F.asc
+    repo: deb https://dl.bintray.com/falcosecurity/deb stable main
+
+trivy_key: https://aquasecurity.github.io/trivy-repo/deb/public.key
+trivy_repo: deb https://aquasecurity.github.io/trivy-repo/deb focal main 
+
+kube_bench_deb: "https://github.com/aquasecurity/kube-bench/releases/download/{{ kube_bench_tag }}/kube-bench_{{ kube_bench_version }}_linux_amd64.deb"

@@ -1,0 +1,26 @@
+---
+- name: Add keys  
+  apt_key: 
+    url: "{{ item.key }}"
+    state: present
+  loop: "{{ software_list }}"
+
+- name: Add repositories
+  apt_repository:
+    repo: "{{ item.repo }}"
+    filename: "{{ item.name }}"
+    state: present
+    update_cache: True 
+  loop: "{{ software_list }}"
+
+- name: Install software 
+  apt:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ software_list }}"
+
+- name: Complete falco installation
+  include_tasks: falco.yml
+
+- name: Install kube-bench 
+  include_tasks: kube-bench.yml
