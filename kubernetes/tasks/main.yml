@@ -28,28 +28,6 @@
   apt_repository:
     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     update_cache: True 
-  
-- name: Install required software for the cluster 
-  apt: 
-    name: "{{ item }}" 
-    force: True 
-  loop: "{{ packages }}"
-
-- name: Add Docker daemon.json file 
-  copy:
-    content: |
-      {
-        "exec-opts": ["native.cgroupdriver=systemd"],
-        "log-driver": "json-file",
-         "storage-driver": "overlay2"
-      }
-    dest: /etc/docker/daemon.json
-
-- name: Create docker.service directory 
-  file:
-    path: /etc/systemd/system/docker.service.d
-    state: directory 
-  notify: restart docker 
 
 - name: remove swap line from /etc/fstab
   lineinfile:
@@ -62,8 +40,8 @@
   command: "swapoff -a"
   tags: kluster
 
-- name: Add vagrant user to docker group 
-  user:
-    name: vagrant 
-    groups: docker 
-    append: True 
+- name: Install required software for the cluster 
+  apt: 
+    name: "{{ item }}" 
+    force: True 
+  loop: "{{ packages }}"

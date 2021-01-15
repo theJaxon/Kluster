@@ -1,7 +1,0 @@
----
-- name: restart docker 
-  service:
-    name: "{{ item }}"
-    state: restarted  
-    enabled: True 
-  loop: "{{ services }}"

@@ -2,12 +2,20 @@
   vars:
     home_dir: /home/vagrant
   roles:
-  - bootstrap
+  - docker
+  - kubernetes
   - master 
 
-- hosts: worker1,worker2
+- hosts: worker1
   roles:
-  - bootstrap
+  - docker
+  - kubernetes 
+  - worker 
+
+- hosts: worker2 
+  roles:
+  - containerd
+  - kubernetes
   - worker 
   
 # Addons -- Optional

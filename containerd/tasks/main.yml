@@ -1,0 +1,35 @@
+---
+- name: Create containerd configuration directory
+  file:
+    path: /etc/containerd 
+    state: directory
+
+- name: Add containerd and crictl conf files
+  copy:
+    src: "{{ item.source }}"
+    dest: "{{ item.destination }}"
+  notify: "{{ item.notification | d(omit) }}"
+  loop: "{{ files }}"
+
+- name: Reload kernel modules 
+  modprobe:
+    name: "{{ item }}"
+    state: present 
+  loop: "{{ kernel_modules }}"
+
+- name: Add gVisor key 
+  apt_key: 
+    url: "{{ gvisor_key }}"
+    state: present 
+
+- name: Add gVisor repository
+  apt_repository:
+    repo: "{{ gvisor_repo }}"
+    state: present 
+    update_cache: True 
+
+- name: Install containerd runtime + gVisor
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages }}"

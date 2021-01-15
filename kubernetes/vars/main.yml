@@ -1,0 +1,6 @@
+---
+packages: 
+  - "kubelet={{ K8S_V }}"
+  - "kubeadm={{ K8S_V }}"
+  - "kubectl={{ K8S_V }}"
+  - kubernetes-cni=0.8.7-00

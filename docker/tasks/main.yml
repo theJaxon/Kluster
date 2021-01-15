@@ -1,0 +1,22 @@
+---
+- name: Install docker container runtime 
+  apt: 
+    name: docker.io
+
+- name: Add vagrant user to docker group 
+  user:
+    name: vagrant 
+    groups: docker 
+    append: True
+     
+- name: Add Docker daemon.json file 
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+
+- name: Create docker.service directory 
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory 
+  notify: restart docker 
+

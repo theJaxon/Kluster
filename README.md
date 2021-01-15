@@ -26,11 +26,11 @@ Yet another k8s cluster using kubeadm
 ### Cluster details:
 - The cluster is configured as one master and 2 worker nodes as follows:
 
-| Machine Name 	|     Address    	|         FQDN        	|
-|:------------:	|:--------------:	|:-------------------:	|
-|    master    	| 192.168.100.10 	|  master.example.com 	|
-|    worker1   	| 192.168.100.11 	| worker1.example.com 	|
-|    worker2   	| 192.168.100.12 	| worker2.example.com 	|
+| Machine Name 	|     Address    	|         FQDN        	| Container Runtime 	|
+|:------------:	|:--------------:	|:-------------------:	|:-----------------:	|
+|    master    	| 192.168.100.10 	|  master.example.com 	|       docker      	|
+|    worker1   	| 192.168.100.11 	| worker1.example.com 	|       docker      	|
+|    worker2   	| 192.168.100.12 	| worker2.example.com 	|     containerd    	|
 
 ---
 

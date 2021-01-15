@@ -1,0 +1,27 @@
+---
+gvisor_key: https://gvisor.dev/archive.key
+gvisor_repo: deb https://storage.googleapis.com/gvisor/releases release main
+packages:
+  - containerd
+  - runsc
+kernel_modules:
+  - overlay
+  - br_netfilter
+files:
+  - source: containerd.conf 
+    destination: /etc/modules-load.d/containerd.conf
+
+  - source: crictl.yaml
+    destination: /etc/crictl.yaml 
+
+  - source: 99-kubernetes-cri.conf
+    destination: /etc/sysctl.d/99-kubernetes-cri.conf
+    notification: sysctl system
+
+  - source: config.toml
+    destination: /etc/containerd/config.toml
+    notification: restart containerd 
+
+  - source: kubelet 
+    destination: /etc/default/kubelet
+    notification: restart kubelet 
