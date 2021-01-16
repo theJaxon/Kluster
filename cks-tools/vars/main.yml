@@ -12,3 +12,15 @@ trivy_key: https://aquasecurity.github.io/trivy-repo/deb/public.key
 trivy_repo: deb https://aquasecurity.github.io/trivy-repo/deb focal main 
 
 kube_bench_deb: "https://github.com/aquasecurity/kube-bench/releases/download/{{ kube_bench_tag }}/kube-bench_{{ kube_bench_version }}_linux_amd64.deb"
+
+# Image policy 
+apiserver_manifest: /etc/kubernetes/manifests/kube-apiserver.yaml
+image_bouncer_repo: github.com/theJaxon/kube-image-bouncer
+image_policy_dir: /etc/kubernetes/imagePolicy 
+image_policy_files:
+  - admission-config.yml
+  - api-user.crt
+  - api-user.key 
+  - image-policy.kubeconfig
+  - webhook.crt
+  - webhook.key

@@ -1,0 +1,37 @@
+---
+- name: Create imagePolicy directory 
+  file:
+    path: "{{ image_policy_dir }}"
+    state: directory
+
+- name: Place config files in imagePolicy dir 
+  copy:
+    src: "{{ item }}"
+    dest: "{{ image_policy_dir }}"
+  loop: "{{ image_policy_files }}"
+
+- name: Install golang package 
+  apt: 
+    name: golang-go 
+    state: present 
+
+- name: build kube-image-bouncer 
+  command: "go get {{ image_bouncer_repo }} " 
+  become_user: vagrant # the binary file will exist in /home/vagrant/go/bin/
+
+- name: Add kube-image-bouncer to bin 
+  copy:
+    src: /home/vagrant/go/bin/kube-image-bouncer
+    dest: /usr/bin/
+    mode: '751'
+
+- name: Add kube-image-bouncer address to api-server
+  blockinfile:
+    block: |2 # Leave 2 space keys before adding the lines
+        hostAliases:
+        - ip: "192.168.100.10"
+          hostnames:
+          - "bouncer.local.lan"
+          - "default.local.lan"
+    insertafter: "spec:"
+    path: "{{ apiserver_manifest }}"
