@@ -9,3 +9,6 @@
   - local-path-storage
   - ingress-nginx-controller
   - metrics-server
+
+- name: Deploy kubernetes dashboard 
+  include_tasks: dashboard.yml
