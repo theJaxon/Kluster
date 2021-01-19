@@ -1,5 +1,4 @@
 ---
-# tasks file for addons
 - name: Install the addons 
   command: "kubectl apply  -f /vagrant/addons/files/{{ item }}.yaml --kubeconfig=/home/vagrant/.kube/conf"
   loop:
@@ -9,3 +8,6 @@
   - local-path-storage
   - ingress-nginx-controller
   - metrics-server
+
+- name: Deploy kubernetes dashboard 
+  include_tasks: dashboard.yml

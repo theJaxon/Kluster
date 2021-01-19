@@ -1,0 +1,13 @@
+- name: Get Kubernetes dashboard latest release tag
+  shell: > 
+    curl https://api.github.com/repos/kubernetes/dashboard/releases/latest | grep tag_name | cut -d '"' -f4
+  args:
+    warn: False 
+  register: dashboard_var 
+
+- name: Deploy kubernetes dashboard 
+  shell: > 
+    kubectl apply -f 
+    https://raw.githubusercontent.com/kubernetes/dashboard/{{ dashboard_var['stdout'] }}/aio/deploy/recommended.yaml 
+    --kubeconfig=/home/vagrant/.kube/conf
+  become_user: vagrant 
