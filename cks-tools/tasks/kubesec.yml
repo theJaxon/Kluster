@@ -1,0 +1,30 @@
+- name: Check if kubesec is installed 
+  command: which kubesec 
+  changed_when: False 
+  ignore_errors: True
+  register: kubesec_var
+
+- block:
+  - name: Display kubesec state 
+    assert:
+      that: 
+      - kubesec_var['rc'] == 0
+      success_msg: "Kubesec is already installed .."
+      fail_msg: "Kubesec wasn't found, installing .."
+  rescue:
+  - name: Get kubesec latest release tag 
+    shell: curl https://api.github.com/repos/controlplaneio/kubesec/releases/latest | grep tag_name | cut -d '"' -f4
+    register: kubesec_tag_var
+
+  - name: Download kubesec latest release 
+    get_url: 
+      url: "https://github.com/controlplaneio/kubesec/releases/download/{{ kubesec_tag_var['stdout'] }}/kubesec_linux_amd64.tar.gz"
+      dest: /tmp/kubesec_linux_amd64.tar.gz
+
+  - name: Add kubesec binary to PATH 
+    unarchive:
+      src: /tmp/kubesec_linux_amd64.tar.gz 
+      dest: /usr/bin/
+      extra_opts:
+      - "--add-file"
+      - "kubesec"

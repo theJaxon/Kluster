@@ -25,6 +25,9 @@
 - name: Install kube-bench 
   include_tasks: kube-bench.yml
 
+- name: Install kubesec 
+  include_tasks: kubesec.yml 
+
 - name: Configure image policy webhook backend 
   include_tasks: image-policy-webhook.yml
   tags: image-policy
