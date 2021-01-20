@@ -1,0 +1,22 @@
+- name: Check if clair-scanner exists 
+  command: which clair-scanner 
+  changed_when: False 
+  ignore_errors: True 
+  register: clair_var
+
+- block:
+  - name: Display clair state 
+    assert:
+      that: 
+      - clair_var['rc'] == 0
+      success_msg: "clair-scanner is already installed .."
+      fail_msg: "clair-scanner wasn't found, installing .."
+  rescue:
+  - name: Get clair-scanner latest release tag 
+    shell: curl https://api.github.com/repos/arminc/clair-scanner/releases/latest | grep tag_name | cut -d '"' -f4
+    register: clair_tag_var
+
+  - name: Download clair latest release and add it to PATH
+    get_url: 
+      url: "https://github.com/arminc/clair-scanner/releases/download/{{ clair_tag_var['stdout'] }}/clair-scanner_linux_amd64"
+      dest: /usr/bin/clair-scanner

@@ -1,0 +1,16 @@
+- name: run clair-db container 
+  docker_container:
+    name: db 
+    image: arminc/clair-db
+    ports:
+    - "5432:5432"
+
+- name: run clair local-scan container 
+  docker_container:
+    name: clair 
+    image: arminc/clair-local-scan
+    ports:
+    - "6060:6060"
+    links: 
+    - db:postgres
+
