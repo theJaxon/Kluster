@@ -1,0 +1,2 @@
+sysdig_key: https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public
+sysdig_repo: deb https://download.sysdig.com/stable/deb stable-$(ARCH)/

@@ -34,6 +34,11 @@
   - clair-scanner.yml 
   - clair-server.yml
 
+  - name: Install sysdig 
+    block: 
+    - include_vars: sysdig.yml
+    - include_tasks: sysdig.yml 
+
 - name: Configure image policy webhook backend 
   include_tasks: image-policy-webhook.yml
   tags: image-policy

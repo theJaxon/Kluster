@@ -6,6 +6,7 @@
 
 ![Ansible](https://img.shields.io/badge/Configured%20using-ansible-EE0000?style=for-the-badge&logo=ansible)
 ![Ingress](https://img.shields.io/badge/nginx-ingress%20controller-269539?style=for-the-badge&logo=Nginx)
+![Locl-path-provisioner](https://img.shields.io/badge/Dynamic%20provisioning-local%20path%20provisioner-0075A8?style=for-the-badge&logo=Rancher)
 
 
 Yet another k8s cluster using kubeadm

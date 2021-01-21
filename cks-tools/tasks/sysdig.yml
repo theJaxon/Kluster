@@ -1,0 +1,26 @@
+- name: Add Sysdig key 
+  apt_key:
+    url: "{{ sysdig_key }}"
+    state: present
+
+- name: Add Sysdig repo file 
+  apt_repository: 
+    repo: "{{ sysdig_repo }}"
+    update_cache: True 
+    state: present
+    
+- name: Get kernel release 
+  command: uname -r 
+  changed_when: False
+  register: uname_var 
+
+- name: Install kernel headers 
+  apt:
+    name: linux-headers-{{ uname_var['stdout'] }}
+    state: present 
+
+- name: Install sysdig 
+  apt:
+    name: sysdig 
+    state: present 
+
