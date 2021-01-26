@@ -2,9 +2,9 @@
 home_dir: /home/vagrant
 packages: 
   - docker.io
-  - "kubelet={{ K8S_V }}"
-  - "kubeadm={{ K8S_V }}"
-  - "kubectl={{ K8S_V }}"
+  - kubelet=1.19.3-00 
+  - kubeadm=1.19.3-00 
+  - kubectl=1.19.3-00 
   - kubernetes-cni=0.8.7-00
 
 services:

@@ -32,7 +32,7 @@
 - name: Install required software for the cluster 
   apt: 
     name: "{{ item }}" 
-    force: True 
+    state: present  
   loop: "{{ packages }}"
 
 - name: Add Docker daemon.json file 
