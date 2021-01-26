@@ -1,9 +1,16 @@
 ---
 gvisor_key: https://gvisor.dev/archive.key
 gvisor_repo: deb https://storage.googleapis.com/gvisor/releases release main
+docker_key: https://download.docker.com/linux/ubuntu/gpg 
+docker_repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
 packages:
-  - containerd
+  - containerd.io
   - runsc
+  - apt-transport-https
+  - ca-certificates
+  - curl 
+  - software-properties-common
+  
 kernel_modules:
   - overlay
   - br_netfilter

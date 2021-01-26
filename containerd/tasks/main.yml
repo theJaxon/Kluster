@@ -11,6 +11,17 @@
   notify: "{{ item.notification | d(omit) }}"
   loop: "{{ files }}"
 
+- name: Add docker key 
+  apt_key: 
+    url: "{{ docker_key }}"
+    state: present
+
+- name: Add docker repo
+  apt_repository:
+    repo: "{{ docker_repo }}"
+    filename: docker
+    state: present
+
 - name: Reload kernel modules 
   modprobe:
     name: "{{ item }}"
