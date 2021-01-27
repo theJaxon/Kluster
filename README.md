@@ -42,3 +42,14 @@ Yet another k8s cluster using kubeadm
 kube-bench --config-dir /tmp/kube-bench/cfg/ --config /tmp/kube-bench/cfg/config.yaml master
 ```
 
+---
+
+#### Using kube-image-bouncer:
+```bash
+cd /etc/kubernetes/imagePolicy
+kube-image-bouncer --cert webhook.crt --key webhook.key &
+
+# Try to create a pod using latest image tag 
+k run nginx --image nginx
+> Error from server (Forbidden): pods "nginx" is forbidden: image policy webhook backend denied one or more images: Images using latest tag are not allowed
+```
