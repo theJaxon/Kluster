@@ -36,3 +36,9 @@ Yet another k8s cluster using kubeadm
 
 ---
 
+#### Using kube-bench:
+- config files are stored in `/tmp/kube-bench`
+```bash
+kube-bench --config-dir /tmp/kube-bench/cfg/ --config /tmp/kube-bench/cfg/config.yaml master
+```
+

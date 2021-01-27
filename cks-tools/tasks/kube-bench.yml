@@ -23,3 +23,21 @@
     state: present 
   when: "'kube-bench' not in ansible_facts['packages'] "
   tags: kube-bench 
+
+- name: Check if config directory exists
+  stat: 
+    path: /tmp/kube-bench
+  register: kube_bench_dir_var
+
+- name: Grab kube-bench config files if /tmp/kube-bench dir wasn't found
+  block:
+  - name: Create a directory to store kube-bench git repo files 
+    file:
+      path: /tmp/kube-bench/
+      state: directory
+ 
+  - name: Clone git repo when kube-bench dir doesn't exist
+    git:
+      repo: https://github.com/aquasecurity/kube-bench.git
+      dest: /tmp/kube-bench/
+  when: not kube_bench_dir_var.stat.exists 
