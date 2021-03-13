@@ -7,6 +7,7 @@
 ![Ansible](https://img.shields.io/badge/Configured%20using-ansible-EE0000?style=for-the-badge&logo=ansible)
 ![Ingress](https://img.shields.io/badge/nginx-ingress%20controller-269539?style=for-the-badge&logo=Nginx)
 
+![Locl-path-provisioner](https://img.shields.io/badge/Dynamic%20provisioning-local%20path%20provisioner-0075A8?style=for-the-badge&logo=Rancher)
 
 Yet another k8s cluster using kubeadm
 
@@ -33,4 +34,14 @@ Yet another k8s cluster using kubeadm
 |    worker2   	| 192.168.100.12 	| worker2.example.com 	|
 
 ---
+---
 
+#### Making local-path the default storage class:
+```bash
+# 1- Enable DefaultStorageClass Admission controller 
+vi /etc/kubernetes/manifests/kube-apiserver.yaml
+- --enable-admission-plugins=NodeRestriction,DefaultStorageClass
+
+#2- Patch the storage class created by local-path-provisioner
+k patch sc local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
